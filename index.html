@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de Banco de Baterías</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="icon-192.png" />
+  <meta name="theme-color" content="#0a0a23" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #0a0a23;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      margin: 0.3rem;
+      font-size: 1rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simulador de Banco de Baterías</h1>
+
+    <label>Voltaje por batería (V):</label>
+    <input type="number" id="voltaje" step="0.1" /><br />
+
+    <label>Amperaje por batería (Ah):</label>
+    <input type="number" id="amperaje" step="0.1" /><br />
+
+    <label>Número de baterías en serie:</label>
+    <input type="number" id="numSerie" /><br />
+
+    <label>Número de cadenas en paralelo:</label>
+    <input type="number" id="numParalelo" /><br />
+
+    <button onclick="calcularBanco()">Calcular</button>
+
+    <div class="result" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcularBanco() {
+      const voltaje = parseFloat(document.getElementById('voltaje').value);
+      const amperaje = parseFloat(document.getElementById('amperaje').value);
+      const numSerie = parseInt(document.getElementById('numSerie').value);
+      const numParalelo = parseInt(document.getElementById('numParalelo').value);
+
+      if (isNaN(voltaje) || isNaN(amperaje) || isNaN(numSerie) || isNaN(numParalelo)) {
+        document.getElementById('resultado').innerText = "Por favor completa todos los campos correctamente.";
+        return;
+      }
+
+      const voltajeTotal = voltaje * numSerie;
+      const capacidadTotal = amperaje * numParalelo;
+
+      document.getElementById('resultado').innerText = 
+        `🔋 Voltaje total del banco: ${voltajeTotal} V\n` +
+        `🔋 Capacidad total del banco: ${capacidadTotal} Ah\n` +
+        `🔌 Energía disponible: ${(voltajeTotal * capacidadTotal).toFixed(2)} Wh`;
+    }
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').then(() => {
+        console.log("✅ Service Worker registrado.");
+      });
+    }
+  </script>
+</body>
+</html>
